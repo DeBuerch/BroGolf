@@ -1,0 +1,62 @@
+class GolfTournament:
+    def __init__(self, name, date, course_rating):
+        self.name = name
+        self.date = date
+        self.course_rating = course_rating
+        self.results = {}
+
+    def add_result(self, player, score):
+        self.results[player] = score
+
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.tournament_results = []
+
+    def add_tournament_result(self, tournament, score):
+        self.tournament_results.append((tournament, score))
+
+def calculate_order_of_merit(players, tournaments):
+    order_of_merit = {}
+    
+    for player in players:
+        best_three = sorted(player.tournament_results, key=lambda x: x[1])[:3]
+        total_points = sum(score for _, score in best_three)
+        order_of_merit[player.name] = total_points
+    
+    return sorted(order_of_merit.items(), key=lambda x: x[1], reverse=True)
+
+# Beispielverwendung
+tournaments = [
+    GolfTournament("Spring Open", "2025-04-15", 72),
+    GolfTournament("Summer Classic", "2025-06-20", 71),
+    GolfTournament("Fall Championship", "2025-09-10", 73)
+]
+
+players = [Player("Alice"), Player("Bob"), Player("Charlie")]
+
+# Ergebnisse hinzufügen
+tournaments[0].add_result("Alice", 70)
+tournaments[0].add_result("Bob", 72)
+tournaments[0].add_result("Charlie", 75)
+
+tournaments[1].add_result("Alice", 69)
+tournaments[1].add_result("Bob", 71)
+tournaments[1].add_result("Charlie", 73)
+
+tournaments[2].add_result("Alice", 71)
+tournaments[2].add_result("Bob", 70)
+tournaments[2].add_result("Charlie", 72)
+
+# Ergebnisse zu Spielern hinzufügen
+for player in players:
+    for tournament in tournaments:
+        if player.name in tournament.results:
+            player.add_tournament_result(tournament, tournament.results[player.name])
+
+# Order of Merit berechnen
+oom = calculate_order_of_merit(players, tournaments)
+
+print("Order of Merit:")
+for rank, (name, points) in enumerate(oom, 1):
+    print(f"{rank}. {name}: {points} Punkte")
