@@ -16,8 +16,10 @@ class Player:
     def add_tournament_result(self, tournament, score):
         self.tournament_results.append((tournament, score))
 
-def calculate_order_of_merit(players, tournaments):
-    order_of_merit = {}
+def calculate_points(score, course_rating):
+    base_points = 100
+    return base_points + ((course_rating - score) * 5)
+
     
     for player in players:
         best_three = sorted(player.tournament_results, key=lambda x: x[1])[:3]
